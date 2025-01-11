@@ -1242,7 +1242,7 @@ csiparse(void)
 {
 	char *p = csiescseq.buf, *np;
 	long int v;
-
+	int sep = ';';
 	csiescseq.narg = 0;
 	if (*p == '?') {
 		csiescseq.priv = 1;
@@ -1259,7 +1259,9 @@ csiparse(void)
 			v = -1;
 		csiescseq.arg[csiescseq.narg++] = v;
 		p = np;
-		if (*p != ';' || csiescseq.narg == ESC_ARG_SIZ)
+		if (sep == ';' && *p == ':')
+			sep = ':';
+		if (*p != sep || csiescseq.narg == ESC_ARG_SIZ)
 			break;
 		p++;
 	}
